@@ -4,13 +4,16 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Honeypot Dashboard</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Honeypot Attack Monitoring</title>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
@@ -18,170 +21,365 @@
 
 <div class="container">
 
-    <h1>🛡 Honeypot Attack Monitoring</h1>
+    <!-- ================================================= -->
+    <!-- HEADER -->
+    <!-- ================================================= -->
 
-    <!-- ATTACKER INFO -->
-    <div class="card">
+    <header class="header">
 
-        <h2>Attacker IP</h2>
+        <h1>🛡 Honeypot Attack Monitoring</h1>
 
-        <p>
-            {% if data.ip %}
-                {{ data.ip }}
-            {% else %}
-                No Active Session
-            {% endif %}
+        <p class="subtitle">
+
+            Real-time Attack Monitoring Dashboard
+
         </p>
 
-    </div>
+    </header>
 
-    <!-- CLASSIFICATION -->
-    <div class="card">
 
-        <h2>Attack Classification</h2>
+    <!-- ================================================= -->
+    <!-- TOP STATUS CARDS -->
+    <!-- ================================================= -->
 
-        <p>
-            {% if data.classification %}
-                {{ data.classification }}
-            {% else %}
-                Waiting for attack...
-            {% endif %}
-        </p>
+    <div class="status-grid">
 
-    </div>
+        <!-- ATTACK TYPE -->
 
-    <!-- COMMANDS -->
-    <div class="card">
+        <div class="status-card">
 
-        <h2>Commands Used</h2>
+            <h3>Attack Type</h3>
 
-        {% if data.commands and data.commands|length > 0 %}
+            <div class="status-value attack">
 
-            <ul class="command-list">
+                {% if data.classification %}
 
-                {% for cmd in data.commands %}
-                    <li>{{ cmd }}</li>
-                {% endfor %}
+                    {{ data.classification }}
 
-            </ul>
+                {% else %}
 
-        {% else %}
+                    Waiting...
 
-            <p>No commands captured.</p>
+                {% endif %}
 
-        {% endif %}
+            </div>
 
-    </div>
+        </div>
 
-    <!-- TIMELINE -->
-    <div class="card">
 
-        <h2>Attack Timeline</h2>
+        <!-- SOURCE IP -->
 
-        <div class="chart-container">
-            <canvas id="timelineChart"></canvas>
+        <div class="status-card">
+
+            <h3>Source IP</h3>
+
+            <div class="status-value">
+
+                {% if data.ip %}
+
+                    {{ data.ip }}
+
+                {% else %}
+
+                    No Active Session
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- SESSION STATUS -->
+
+        <div class="status-card">
+
+            <h3>Session Status</h3>
+
+            <div class="live-status">
+
+                {% if data.ip %}
+
+                    <span class="live-dot"></span>
+
+                    LIVE
+
+                {% else %}
+
+                    <span class="offline-dot"></span>
+
+                    IDLE
+
+                {% endif %}
+
+            </div>
+
         </div>
 
     </div>
 
-    <!-- REPORT -->
-    <div class="card center">
 
-        <a href="/report">
-            <button>Download PDF Report</button>
-        </a>
+    <!-- ================================================= -->
+    <!-- LIVE TERMINAL -->
+    <!-- ================================================= -->
+
+    <div class="card terminal-card">
+
+        <div class="terminal-header">
+
+            <span>● LIVE HONEYPOT TERMINAL</span>
+
+            <span class="terminal-status">
+
+                {% if data.ip %}
+
+                    🟢 LIVE
+
+                {% else %}
+
+                    ⚪ IDLE
+
+                {% endif %}
+
+            </span>
+
+        </div>
+
+        <table class="terminal-table">
+
+            <thead>
+
+                <tr>
+
+                    <th width="18%">Time</th>
+
+                    <th width="47%">Command</th>
+
+                    <th width="35%">Classification</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% if data.command_log %}
+
+                {% for log in data.command_log %}
+
+                <tr>
+
+                    <td>
+
+                        {{ log.time }}
+
+                    </td>
+
+                    <td class="command">
+
+                        &gt; {{ log.command }}
+
+                    </td>
+
+                    <td>
+
+                        <span class="classification-badge">
+
+                            {{ log.classification }}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            {% else %}
+
+                <tr>
+
+                    <td colspan="3"
+
+                        style="text-align:center;padding:30px;">
+
+                        Waiting for attacker connection...
+
+                    </td>
+
+                </tr>
+
+            {% endif %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- ================================================= -->
+    <!-- ATTACK PULSE GRAPH -->
+    <!-- ================================================= -->
+
+    <div class="card">
+
+        <div class="section-title">
+
+            📈 Attacks Per Minute
+
+        </div>
+
+        <div class="chart-container">
+
+            <canvas id="timelineChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- BOTTOM SECTION -->
+    <!-- ================================================= -->
+
+    <div class="bottom-grid">
+
+        <!-- THREAT SUMMARY -->
+
+        <div class="card">
+
+            <div class="section-title">
+
+                Threat Summary
+
+            </div>
+
+            <table class="summary-table">
+
+                <tr>
+
+                    <td>Source IP</td>
+
+                    <td>
+
+                        {% if data.ip %}
+
+                            {{ data.ip }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Attack Type</td>
+
+                    <td>
+
+                        {% if data.classification %}
+
+                            {{ data.classification }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Total Commands</td>
+
+                    <td>
+
+                        {{ data.total_commands }}
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Session Started</td>
+
+                    <td>
+
+                        {% if data.session_start %}
+
+                            {{ data.session_start }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+
+        <!-- REPORT -->
+
+        <div class="card report-card">
+
+            <div class="section-title">
+
+                Download Report
+
+            </div>
+
+            <p>
+
+                Generate a PDF report of the current attack session.
+
+            </p>
+
+            <a href="/report">
+
+                <button class="report-btn">
+
+                    Download PDF Report
+
+                </button>
+
+            </a>
+
+        </div>
 
     </div>
 
 </div>
 
+
+<!-- ================================================= -->
+<!-- JAVASCRIPT -->
+<!-- ================================================= -->
+
 <script>
 
-    // SAFE DATA FROM FLASK
-    let timelineData = [];
+window.graphLabels = {{ data.graph_labels | tojson | safe }};
 
-    try {
-
-        timelineData = JSON.parse('{{ data.timeline | default([]) | tojson | safe }}');
-
-    } catch (e) {
-
-        console.error("Timeline parse error:", e);
-
-        timelineData = [];
-    }
-
-    // GENERATE LABELS
-    const labels = [];
-
-    for (let i = 0; i < timelineData.length; i++) {
-
-        labels.push("Step " + (i + 1));
-    }
-
-    // GET CANVAS
-    const canvas = document.getElementById("timelineChart");
-
-    if (canvas) {
-
-        const ctx = canvas.getContext("2d");
-
-        new Chart(ctx, {
-
-            type: "line",
-
-            data: {
-
-                labels: labels,
-
-                datasets: [{
-
-                    label: "Attack Activity",
-
-                    data: timelineData,
-
-                    borderWidth: 2,
-
-                    fill: false,
-
-                    tension: 0.3
-
-                }]
-
-            },
-
-            options: {
-
-                responsive: true,
-
-                maintainAspectRatio: false,
-
-                animation: false,
-
-                scales: {
-
-                    y: {
-
-                        beginAtZero: true,
-
-                        ticks: {
-
-                            precision: 0
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    // AUTO REFRESH
-    setTimeout(function() {
-
-        window.location.reload();
-
-    }, 3000);
+window.graphValues = {{ data.graph_values | tojson | safe }};
 
 </script>
 
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+
 </body>
+
 </html>
