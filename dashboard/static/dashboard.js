@@ -2,14 +2,15 @@
 // HONEYPOT DASHBOARD
 // ======================================================
 
-// Timeline data passed from Flask
-const timelineData = window.graphValues || [];
+// Graph data from Flask
 
-// Generate labels
 const labels = window.graphLabels || [];
 
+const graphData = window.graphValues || [];
+
+
 // ======================================================
-// ATTACK PULSE GRAPH
+// BAR CHART
 // ======================================================
 
 const canvas = document.getElementById("timelineChart");
@@ -20,7 +21,7 @@ if (canvas) {
 
     new Chart(ctx, {
 
-        type: "line",
+        type: "bar",
 
         data: {
 
@@ -30,25 +31,21 @@ if (canvas) {
 
                 {
 
-                    label: "Attacks Per Minute",
+                    label: "Commands per Minute",
 
-                    data: timelineData,
+                    data: graphData,
 
-                    borderColor: "#38bdf8",
+                    backgroundColor: "#38bdf8",
 
-                    backgroundColor: "rgba(56,189,248,0.18)",
+                    borderColor: "#0ea5e9",
 
-                    fill: true,
+                    borderWidth: 1,
 
-                    borderWidth: 3,
+                    borderRadius: 5,
 
-                    pointRadius: 5,
+                    barPercentage: 0.75,
 
-                    pointHoverRadius: 7,
-
-                    pointBackgroundColor: "#38bdf8",
-
-                    tension: 0.35
+                    categoryPercentage: 0.8
 
                 }
 
@@ -64,17 +61,11 @@ if (canvas) {
 
             animation: false,
 
-            interaction: {
-
-                intersect: false,
-
-                mode: "index"
-
-            },
-
             plugins: {
 
                 legend: {
+
+                    display: true,
 
                     labels: {
 
@@ -87,6 +78,20 @@ if (canvas) {
                         }
 
                     }
+
+                },
+
+                tooltip: {
+
+                    backgroundColor: "#1e293b",
+
+                    titleColor: "#ffffff",
+
+                    bodyColor: "#ffffff",
+
+                    borderColor: "#38bdf8",
+
+                    borderWidth: 1
 
                 }
 
@@ -136,6 +141,8 @@ if (canvas) {
 
                         precision: 0,
 
+                        stepSize: 1,
+
                         color: "#cbd5e1"
 
                     },
@@ -144,7 +151,7 @@ if (canvas) {
 
                         display: true,
 
-                        text: "Attack Count",
+                        text: "Commands Captured",
 
                         color: "#ffffff",
 
@@ -187,7 +194,7 @@ setInterval(function () {
 
 
 // ======================================================
-// LIVE STATUS ANIMATION
+// LIVE STATUS BLINK
 // ======================================================
 
 const liveDot = document.querySelector(".live-dot");

@@ -39,26 +39,58 @@
 
 
     <!-- ================================================= -->
-    <!-- TOP STATUS CARDS -->
+    <!-- STATUS CARDS -->
     <!-- ================================================= -->
 
     <div class="status-grid">
 
-        <!-- ATTACK TYPE -->
+        <!-- THREAT SEVERITY -->
 
         <div class="status-card">
 
-            <h3>Attack Type</h3>
+            <h3>Threat Severity</h3>
 
-            <div class="status-value attack">
+            <div class="status-value">
 
-                {% if data.classification %}
+                {% if data.severity == "LOW" %}
 
-                    {{ data.classification }}
+                    <span class="severity low">
+
+                        🟢 LOW
+
+                    </span>
+
+                {% elif data.severity == "MEDIUM" %}
+
+                    <span class="severity medium">
+
+                        🟡 MEDIUM
+
+                    </span>
+
+                {% elif data.severity == "HIGH" %}
+
+                    <span class="severity high">
+
+                        🟠 HIGH
+
+                    </span>
+
+                {% elif data.severity == "CRITICAL" %}
+
+                    <span class="severity critical">
+
+                        🔴 CRITICAL
+
+                    </span>
 
                 {% else %}
 
-                    Waiting...
+                    <span class="severity low">
+
+                        Waiting...
+
+                    </span>
 
                 {% endif %}
 
@@ -200,7 +232,6 @@
                 <tr>
 
                     <td colspan="3"
-
                         style="text-align:center;padding:30px;">
 
                         Waiting for attacker connection...
@@ -217,15 +248,16 @@
 
     </div>
 
+
     <!-- ================================================= -->
-    <!-- ATTACK PULSE GRAPH -->
+    <!-- ATTACK ACTIVITY GRAPH -->
     <!-- ================================================= -->
 
     <div class="card">
 
         <div class="section-title">
 
-            📈 Attacks Per Minute
+            📈 Attack Activity Timeline
 
         </div>
 
@@ -262,15 +294,7 @@
 
                     <td>
 
-                        {% if data.ip %}
-
-                            {{ data.ip }}
-
-                        {% else %}
-
-                            -
-
-                        {% endif %}
+                        {{ data.ip if data.ip else "-" }}
 
                     </td>
 
@@ -278,13 +302,41 @@
 
                 <tr>
 
-                    <td>Attack Type</td>
+                    <td>Threat Severity</td>
 
                     <td>
 
-                        {% if data.classification %}
+                        {% if data.severity == "LOW" %}
 
-                            {{ data.classification }}
+                            <span class="severity low">
+
+                                🟢 LOW
+
+                            </span>
+
+                        {% elif data.severity == "MEDIUM" %}
+
+                            <span class="severity medium">
+
+                                🟡 MEDIUM
+
+                            </span>
+
+                        {% elif data.severity == "HIGH" %}
+
+                            <span class="severity high">
+
+                                🟠 HIGH
+
+                            </span>
+
+                        {% elif data.severity == "CRITICAL" %}
+
+                            <span class="severity critical">
+
+                                🔴 CRITICAL
+
+                            </span>
 
                         {% else %}
 
@@ -298,7 +350,19 @@
 
                 <tr>
 
-                    <td>Total Commands</td>
+                    <td>Risk Score</td>
+
+                    <td>
+
+                        {{ data.score }}
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Commands Captured</td>
 
                     <td>
 
@@ -314,15 +378,7 @@
 
                     <td>
 
-                        {% if data.session_start %}
-
-                            {{ data.session_start }}
-
-                        {% else %}
-
-                            -
-
-                        {% endif %}
+                        {{ data.session_start if data.session_start else "-" }}
 
                     </td>
 
@@ -333,7 +389,7 @@
         </div>
 
 
-        <!-- REPORT -->
+        <!-- PDF REPORT -->
 
         <div class="card report-card">
 
@@ -345,7 +401,7 @@
 
             <p>
 
-                Generate a PDF report of the current attack session.
+                Export the complete attack session as a PDF report.
 
             </p>
 
@@ -367,7 +423,7 @@
 
 
 <!-- ================================================= -->
-<!-- JAVASCRIPT -->
+<!-- JAVASCRIPT DATA -->
 <!-- ================================================= -->
 
 <script>

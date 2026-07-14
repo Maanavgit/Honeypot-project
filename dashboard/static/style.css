@@ -829,3 +829,47 @@ canvas{
         box-shadow .25s;
 
 }
+
+.severity{
+
+    font-weight:bold;
+
+    padding:8px 14px;
+
+    border-radius:20px;
+
+    display:inline-block;
+
+}
+
+.low{
+
+    background:#15803d;
+
+    color:white;
+
+}
+
+.medium{
+
+    background:#ca8a04;
+
+    color:white;
+
+}
+
+.high{
+
+    background:#ea580c;
+
+    color:white;
+
+}
+
+.critical{
+
+    background:#dc2626;
+
+    color:white;
+
+}
