@@ -14,11 +14,17 @@ app = Flask(__name__)
 @app.route("/")
 def index():
 
-    # ---------------------------------------
-    # BUILD GRAPH DATA
-    # ---------------------------------------
+    # =====================================================
+    # BUILD GRAPH DATA (COMMANDS PER MINUTE)
+    # =====================================================
 
-    command_log = dashboard_data.get("command_log", [])
+    command_log = dashboard_data.get(
+
+        "command_log",
+
+        []
+
+    )
 
     time_counter = Counter()
 
@@ -34,7 +40,11 @@ def index():
 
     if time_counter:
 
-        sorted_minutes = sorted(time_counter.keys())
+        sorted_minutes = sorted(
+
+            time_counter.keys()
+
+        )
 
         start = datetime.strptime(
 
@@ -56,73 +66,63 @@ def index():
 
         while current <= end:
 
-            minute = current.strftime("%H:%M")
+            minute = current.strftime(
 
-            graph_labels.append(minute)
-
-            graph_values.append(
-
-                time_counter.get(minute, 0)
+                "%H:%M"
 
             )
 
-            current += timedelta(minutes=1)
+            graph_labels.append(
 
-    # ---------------------------------------
-    # DASHBOARD DATA
-    # ---------------------------------------
+                minute
+
+            )
+
+            graph_values.append(
+
+                time_counter.get(
+
+                    minute,
+
+                    0
+
+                )
+
+            )
+
+            current += timedelta(
+
+                minutes=1
+
+            )
+
+    # =====================================================
+    # SEND DATA TO TEMPLATE
+    # =====================================================
 
     safe_data = {
 
-        "ip": dashboard_data.get("ip", ""),
+        "ip":
 
-        "severity": dashboard_data.get(
+            dashboard_data.get(
 
-            "severity",
+                "ip",
 
-            "LOW"
+                ""
 
-        ),
+            ),
 
-        "attack_type": dashboard_data.get(
+        "severity":
 
-            "attack_type",
+            dashboard_data.get(
 
-            "General Suspicious Activity"
+                "severity",
 
-        ),
+                "LOW"
 
-        "score": dashboard_data.get(
+            ),
 
-            "score",
-
-            0
-
-        ),
-
-        "commands": dashboard_data.get(
-
-            "commands",
-
-            []
-
-        ),
-
-        "command_log": command_log,
-
-        "graph_labels": graph_labels,
-
-        "graph_values": graph_values,
-
-        "session_start": dashboard_data.get(
-
-            "session_start",
-
-            ""
-
-        ),
-
-        "total_commands": len(
+        "commands":
 
             dashboard_data.get(
 
@@ -130,9 +130,43 @@ def index():
 
                 []
 
-            )
+            ),
 
-        )
+        "command_log":
+
+            command_log,
+
+        "graph_labels":
+
+            graph_labels,
+
+        "graph_values":
+
+            graph_values,
+
+        "session_start":
+
+            dashboard_data.get(
+
+                "session_start",
+
+                ""
+
+            ),
+
+        "total_commands":
+
+            len(
+
+                dashboard_data.get(
+
+                    "commands",
+
+                    []
+
+                )
+
+            )
 
     }
 
@@ -145,12 +179,20 @@ def index():
     )
 
 
+# =====================================================
+# PDF REPORT
+# =====================================================
+
 @app.route("/report")
 def report():
 
     buffer = io.BytesIO()
 
-    pdf = canvas.Canvas(buffer)
+    pdf = canvas.Canvas(
+
+        buffer
+
+    )
 
     pdf.setTitle(
 
@@ -210,7 +252,7 @@ def report():
 
         740,
 
-        f"Overall Attack : {dashboard_data.get('attack_type','-')}"
+        f"Session Started : {dashboard_data.get('session_start','-')}"
 
     )
 
@@ -220,31 +262,11 @@ def report():
 
         720,
 
-        f"Risk Score : {dashboard_data.get('score',0)}"
+        f"Commands Captured : {len(dashboard_data.get('commands', []))}"
 
     )
 
-    pdf.drawString(
-
-        60,
-
-        700,
-
-        f"Session Started : {dashboard_data.get('session_start','-')}"
-
-    )
-
-    pdf.drawString(
-
-        60,
-
-        680,
-
-        f"Commands Captured : {len(dashboard_data.get('commands',[]))}"
-
-    )
-
-    y = 640
+    y = 680
 
     pdf.setFont(
 
@@ -290,9 +312,7 @@ def report():
 
                 f"[{item['time']}] "
 
-                f"{item['command']} "
-
-                f"({item['classification']})"
+                f"{item['command']}"
 
             )
 
@@ -350,6 +370,10 @@ def report():
 
     )
 
+
+# =====================================================
+# MAIN
+# =====================================================
 
 if __name__ == "__main__":
 

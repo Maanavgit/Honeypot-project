@@ -1,116 +1,115 @@
+# ======================================================
+# CLASSIFY A SINGLE COMMAND
+# Used by the Live Honeypot Terminal
+# ======================================================
+
+def classify_command(cmd):
+
+    cmd = cmd.lower().strip()
+
+    # -----------------------------
+    # CRITICAL
+    # -----------------------------
+
+    if "rm -rf" in cmd:
+
+        return "Destructive Attack"
+
+    # -----------------------------
+    # HIGH
+    # -----------------------------
+
+    elif "hydra" in cmd:
+
+        return "Brute Force Attempt"
+
+    elif "wget" in cmd or "curl" in cmd:
+
+        return "Malicious Download Attempt"
+
+    # -----------------------------
+    # MEDIUM
+    # -----------------------------
+
+    elif "cat /etc/passwd" in cmd:
+
+        return "Privilege Enumeration"
+
+    elif "nmap" in cmd:
+
+        return "Reconnaissance Attack"
+
+    # -----------------------------
+    # LOW
+    # -----------------------------
+
+    elif cmd in [
+
+        "ls",
+
+        "pwd",
+
+        "whoami",
+
+        "uname -a"
+
+    ]:
+
+        return "Reconnaissance"
+
+    return "General Suspicious Activity"
+
+
+# ======================================================
+# ANALYZE COMPLETE SESSION
+# Used for the Threat Severity card
+# ======================================================
+
 def analyze_session(commands):
 
-    score = 0
-
-    attack_types = set()
+    severity = "LOW"
 
     for cmd in commands:
 
         cmd = cmd.lower()
 
+        # Highest priority
         if "rm -rf" in cmd:
 
-            score += 10
-
-            attack_types.add("Destructive Attack")
-
-        elif "hydra" in cmd:
-
-            score += 6
-
-            attack_types.add("Brute Force Attempt")
-
-        elif "cat /etc/passwd" in cmd:
-
-            score += 5
-
-            attack_types.add("Privilege Enumeration")
-
-        elif "wget" in cmd or "curl" in cmd:
-
-            score += 4
-
-            attack_types.add("Malicious Download Attempt")
-
-        elif "nmap" in cmd:
-
-            score += 3
-
-            attack_types.add("Reconnaissance Attack")
-
-        elif cmd in ["ls", "pwd", "whoami", "uname -a"]:
-
-            score += 1
-
-            attack_types.add("Reconnaissance")
-
-        else:
-
-            score += 1
-
-            attack_types.add("General Suspicious Activity")
-
-
-    # -----------------------------
-    # Overall Severity
-    # -----------------------------
-
-    if score <= 4:
-
-        severity = "LOW"
-
-    elif score <= 10:
-
-        severity = "MEDIUM"
-
-    elif score <= 18:
-
-        severity = "HIGH"
-
-    else:
-
-        severity = "CRITICAL"
-
-
-    # -----------------------------
-    # Overall Attack Type
-    # Highest priority wins
-    # -----------------------------
-
-    priority = [
-
-        "Destructive Attack",
-
-        "Brute Force Attempt",
-
-        "Privilege Enumeration",
-
-        "Malicious Download Attempt",
-
-        "Reconnaissance Attack",
-
-        "Reconnaissance",
-
-        "General Suspicious Activity"
-
-    ]
-
-    overall_attack = "General Suspicious Activity"
-
-    for attack in priority:
-
-        if attack in attack_types:
-
-            overall_attack = attack
+            severity = "CRITICAL"
 
             break
 
+        # HIGH
+        elif (
+
+            "hydra" in cmd or
+
+            "wget" in cmd or
+
+            "curl" in cmd
+
+        ):
+
+            if severity != "CRITICAL":
+
+                severity = "HIGH"
+
+        # MEDIUM
+        elif (
+
+            "nmap" in cmd or
+
+            "cat /etc/passwd" in cmd
+
+        ):
+
+            if severity == "LOW":
+
+                severity = "MEDIUM"
+
     return {
 
-        "severity": severity,
-
-        "attack_type": overall_attack,
-
-        "score": score
+        "severity": severity
 
     }

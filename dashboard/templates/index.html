@@ -21,9 +21,9 @@
 
 <div class="container">
 
-    <!-- ================================================= -->
+    <!-- ================================================ -->
     <!-- HEADER -->
-    <!-- ================================================= -->
+    <!-- ================================================ -->
 
     <header class="header">
 
@@ -38,11 +38,12 @@
     </header>
 
 
-    <!-- ================================================= -->
-    <!-- STATUS CARDS -->
-    <!-- ================================================= -->
+    <!-- ================================================ -->
+    <!-- TOP STATUS CARDS -->
+    <!-- ================================================ -->
 
     <div class="status-grid">
+
 
         <!-- THREAT SEVERITY -->
 
@@ -151,15 +152,19 @@
     </div>
 
 
-    <!-- ================================================= -->
-    <!-- LIVE TERMINAL -->
-    <!-- ================================================= -->
+    <!-- ================================================ -->
+    <!-- LIVE HONEYPOT TERMINAL -->
+    <!-- ================================================ -->
 
     <div class="card terminal-card">
 
         <div class="terminal-header">
 
-            <span>● LIVE HONEYPOT TERMINAL</span>
+            <span>
+
+                ● LIVE HONEYPOT TERMINAL
+
+            </span>
 
             <span class="terminal-status">
 
@@ -177,17 +182,30 @@
 
         </div>
 
+
         <table class="terminal-table">
 
             <thead>
 
                 <tr>
 
-                    <th width="18%">Time</th>
+                    <th width="18%">
 
-                    <th width="47%">Command</th>
+                        Time
 
-                    <th width="35%">Classification</th>
+                    </th>
+
+                    <th width="47%">
+
+                        Command
+
+                    </th>
+
+                    <th width="35%">
+
+                        Classification
+
+                    </th>
 
                 </tr>
 
@@ -248,16 +266,15 @@
 
     </div>
 
-
-    <!-- ================================================= -->
+    <!-- ================================================ -->
     <!-- ATTACK ACTIVITY GRAPH -->
-    <!-- ================================================= -->
+    <!-- ================================================ -->
 
     <div class="card">
 
         <div class="section-title">
 
-            📈 Attack Activity Timeline
+            📊 Commands Per Minute
 
         </div>
 
@@ -270,9 +287,9 @@
     </div>
 
 
-    <!-- ================================================= -->
+    <!-- ================================================ -->
     <!-- BOTTOM SECTION -->
-    <!-- ================================================= -->
+    <!-- ================================================ -->
 
     <div class="bottom-grid">
 
@@ -294,7 +311,15 @@
 
                     <td>
 
-                        {{ data.ip if data.ip else "-" }}
+                        {% if data.ip %}
+
+                            {{ data.ip }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
 
                     </td>
 
@@ -350,19 +375,7 @@
 
                 <tr>
 
-                    <td>Risk Score</td>
-
-                    <td>
-
-                        {{ data.score }}
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>Commands Captured</td>
+                    <td>Total Commands</td>
 
                     <td>
 
@@ -378,7 +391,15 @@
 
                     <td>
 
-                        {{ data.session_start if data.session_start else "-" }}
+                        {% if data.session_start %}
+
+                            {{ data.session_start }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
 
                     </td>
 
@@ -389,7 +410,7 @@
         </div>
 
 
-        <!-- PDF REPORT -->
+        <!-- DOWNLOAD REPORT -->
 
         <div class="card report-card">
 
@@ -401,7 +422,7 @@
 
             <p>
 
-                Export the complete attack session as a PDF report.
+                Export the current attack session as a PDF report.
 
             </p>
 
@@ -422,9 +443,9 @@
 </div>
 
 
-<!-- ================================================= -->
-<!-- JAVASCRIPT DATA -->
-<!-- ================================================= -->
+<!-- ================================================ -->
+<!-- GRAPH DATA -->
+<!-- ================================================ -->
 
 <script>
 
