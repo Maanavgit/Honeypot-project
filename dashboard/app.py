@@ -357,7 +357,7 @@ def report():
     pdf.save()
 
     buffer.seek(0)
-
+    
     return send_file(
 
         buffer,
