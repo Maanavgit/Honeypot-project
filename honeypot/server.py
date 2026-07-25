@@ -56,7 +56,7 @@ def handle_client(conn, addr):
     with session_lock:
         if active_session:
             print(f"[BLOCKED] Connection rejected from {ip}")
-            conn.send(b"\nServer Busy.\nMaximum one attacker session allowed.\nPlease try again later.\n")
+            conn.send(b"\nServer Busy.\nPlease try again later.\n")
             conn.close()
             return
         active_session = True
@@ -218,7 +218,7 @@ def handle_client(conn, addr):
     with session_lock:
         if active_session:
             print(f"[BLOCKED] Connection rejected from {ip}")
-            conn.send(b"\nServer Busy.\nMaximum one attacker session allowed.\nPlease try again later.\n")
+            conn.send(b"\nServer Busy.\nPlease try again later.\n")
             conn.close()
             return
         active_session = True

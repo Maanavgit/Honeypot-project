@@ -8,7 +8,7 @@ os.makedirs(LOG_DIR, exist_ok=True)
 
 def create_session_log(session_id=None):
 
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 
     filename = os.path.join(
 
