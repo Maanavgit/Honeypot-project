@@ -113,7 +113,7 @@ The project has two execution modes.
 Run
 
 ```bash
-python3 honeypot.py
+python3 run.py
 ```
 
 This starts only the honeypot server.
@@ -131,7 +131,7 @@ Port 2222
 Run
 
 ```bash
-python3 run.py
+python3 runit.py
 ```
 
 This starts
