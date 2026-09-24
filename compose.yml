@@ -1,0 +1,11 @@
+services:
+  honeypot:
+    build: .
+    container_name: honeypot
+    ports:
+      - "2222:2222"
+      - "5000:5000"
+    volumes:
+      - ./logs:/app/logs
+      - ./reports:/app/reports
+    restart: unless-stopped
