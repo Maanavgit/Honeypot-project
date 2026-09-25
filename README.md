@@ -261,13 +261,13 @@ The dashboard displays:
 
 From another machine connected to the same network, use Netcat or Ncat.
 
-From Linux machines:
+If using a Linux machine to simulate the attacker's machine, use:
 
 ```bash
 nc <HONEYPOT-IP> 2222
 ```
 
-From Lindows machines (in Powershell or Command prompt):
+If using a Windows machine (in PowerShell or Command prompt) to simulate attacker's machine:
 
 ```bash
 ncat <HONEYPOT-IP> 2222
