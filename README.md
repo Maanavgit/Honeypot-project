@@ -261,6 +261,14 @@ The dashboard displays:
 
 From another machine connected to the same network, use Netcat or Ncat.
 
+From Linux machines:
+
+```bash
+nc <HONEYPOT-IP> 2222
+```
+
+From Lindows machines (in Powershell or Command prompt):
+
 ```bash
 ncat <HONEYPOT-IP> 2222
 ```
